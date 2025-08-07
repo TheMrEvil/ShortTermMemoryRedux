@@ -4,16 +4,16 @@
  * Initialize STMR state and settings
  */
 function initializeSTMR() {
-  if (!state.stmr) {
-    state.stmr = {
-      isPlanning,
-      turnCounter,
-      turnsPerPlanning,
-       enabled,
-        Version,
-        InputText
+    if (!state.stmr) {
+        state.stmr = {
+            isPlanning,
+            turnCounter,
+            turnsPerPlanning,
+            enabled,
+            Version,
+            InputText
+        }
     }
-  }
   
     // Ensure all properties exist for backwards compatibility
     if (state.stmr.isPlanning === undefined) {
@@ -32,7 +32,7 @@ function initializeSTMR() {
         state.stmr.InputText = ''
     }
 
-        state.stmr.Version = '1.2.2'
+        state.stmr.Version = '1.2.3'
 
 }
 
@@ -292,5 +292,5 @@ function removeInputFromText(text) {
         text = text.replace(inputRegex, '');
         state.stmr.InputText = ''; // Clear the input after removing it
     }
-    return text;
+    return { text }
 }
