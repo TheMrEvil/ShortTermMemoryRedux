@@ -29,7 +29,7 @@ function initializeSTMR() {
         state.stmr.enabled = true
     }
 
-    state.stmr.Version = '1.2.8'
+    state.stmr.Version = '1.2.9'
 
 }
 
@@ -195,7 +195,6 @@ function stmrContext(text) {
     // Initialize state and retrieve settings
     initializeSTMR()
     retrieveSettingsFromCard()
-    text = removeInputFromText(text)
 
     // Reset planning flag each time to ensure clean state.
     state.stmr.isPlanning = false
@@ -203,6 +202,7 @@ function stmrContext(text) {
     // Check if it's time for planning based on our counter
     if (shouldTriggerPlanning()) {
         state.stmr.isPlanning = true
+        text = removeInputFromText(text)
 
         // Read the existing notes from the card
         const notepadCard = storyCards.find(sc => sc.title === STMR_CARD_NAME)
