@@ -1,4 +1,5 @@
 ﻿const STMR_CARD_NAME = 'STMR - Ai Notepad'
+InputText = ''
 
 /**
  * Initialize STMR state and settings
@@ -10,8 +11,7 @@ function initializeSTMR() {
             turnCounter,
             turnsPerPlanning,
             enabled,
-            Version,
-            InputText
+            Version
         }
     }
   
@@ -28,11 +28,8 @@ function initializeSTMR() {
     if (state.stmr.enabled === undefined) {
         state.stmr.enabled = true
     }
-    if (state.stmr.InputText === undefined) {
-        state.stmr.InputText = ''
-    }
 
-        state.stmr.Version = '1.2.3'
+        state.stmr.Version = '1.2.4'
 
 }
 
@@ -279,16 +276,13 @@ function stmrOutput (text) {
 }
 
 function stmrInput(text) {
-    state.stmr.InputText = text
+    InputText = text
 }
 function removeInputFromText(text) {
     // Remove the input text from the context
-    if (state.stmr.InputText === undefined) {
-        state.stmr.InputText = '';
-    }
     if (state.stmr.InputText) {
-        console.log(`does context contain input:` + text.includes(state.stmr.InputText));
-        const inputRegex = new RegExp(state.stmr.InputText);
+        console.log(`does context contain input:` + text.includes(InputText));
+        const inputRegex = new RegExp(InputText);
         text = text.replace(inputRegex, '');
         state.stmr.InputText = ''; // Clear the input after removing it
     }
