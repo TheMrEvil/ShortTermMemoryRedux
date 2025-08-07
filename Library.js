@@ -19,22 +19,20 @@ function initializeSTMR() {
     if (state.stmr.isPlanning === undefined) {
         state.stmr.isPlanning = false
     }
-  if (state.stmr.turnCounter === undefined) {
-      state.stmr.turnCounter = 0
-  }
-  
-  if (state.stmr.turnsPerPlanning === undefined) {
-      state.stmr.turnsPerPlanning = 1
-  }
-
-  if (state.stmr.enabled === undefined) {
-      state.stmr.enabled = true
+    if (state.stmr.turnCounter === undefined) {
+        state.stmr.turnCounter = 0
+    }
+    if (state.stmr.turnsPerPlanning === undefined) {
+        state.stmr.turnsPerPlanning = 1
+    }
+    if (state.stmr.enabled === undefined) {
+        state.stmr.enabled = true
     }
     if (state.stmr.InputText === undefined) {
         state.stmr.InputText = ''
     }
 
-        state.stmr.Version = '1.2.1'
+        state.stmr.Version = '1.2.2'
 
 }
 
@@ -285,6 +283,9 @@ function stmrInput(text) {
 }
 function removeInputFromText(text) {
     // Remove the input text from the context
+    if (state.stmr.InputText === undefined) {
+        state.stmr.InputText = '';
+    }
     if (state.stmr.InputText) {
         console.log(`does context contain input:` + text.includes(state.stmr.InputText));
         const inputRegex = new RegExp(state.stmr.InputText);
