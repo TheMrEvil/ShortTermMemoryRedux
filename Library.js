@@ -29,9 +29,12 @@ function initializeSTMR() {
 
   if (state.stmr.enabled === undefined) {
       state.stmr.enabled = true
-  }
+    }
+    if (state.stmr.InputText === undefined) {
+        state.stmr.InputText = ''
+    }
 
-        state.stmr.Version = '1.2.0'
+        state.stmr.Version = '1.2.1'
 
 }
 
