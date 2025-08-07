@@ -10,7 +10,7 @@ function initializeSTMR() {
       turnCounter: 0,
       turnsPerPlanning: 1, // Planning happens every 1 turns by default
        enabled: true, // STMR is enabled by default
-      Version: '1.1.2'
+      Version: '1.1.3'
     }
   }
   
@@ -27,7 +27,7 @@ function initializeSTMR() {
     state.stmr.enabled = true
     }
     if (state.stmr.Version === undefined) {
-        state.stmr.Version = '1.1.2'
+        state.stmr.Version = '1.1.3'
     }
 }
 
@@ -186,7 +186,8 @@ function feedNotepadToAI(text) {
  * @param {string} text The context text.
  * @returns {{text: string}} The modified context.
  */
-function stmrContext (text) {
+function stmrContext(text) {
+    initializeSTMR()
   // Ensure notepad card exists
   createIfNoNotepadCard()
   
@@ -244,7 +245,8 @@ function stmrOutput (text) {
     let newNotepadContent = text // Default content if parsing fails
 
 
-    // Ensure card exists and update it
+      // Ensure card exists and update it
+      initializeSTMR()
     createIfNoNotepadCard()
     updateNotepadCard(newNotepadContent)
     
