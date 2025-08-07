@@ -29,7 +29,7 @@ function initializeSTMR() {
         state.stmr.enabled = true
     }
 
-    state.stmr.Version = '1.2.9'
+    state.stmr.Version = '1.3.0'
 
 }
 
@@ -198,17 +198,29 @@ function stmrContext(text) {
 
     // Reset planning flag each time to ensure clean state.
     state.stmr.isPlanning = false
-
     // Check if it's time for planning based on our counter
     if (shouldTriggerPlanning()) {
         state.stmr.isPlanning = true
         text = removeInputFromText(text)
-
         // Read the existing notes from the card
         const notepadCard = storyCards.find(sc => sc.title === STMR_CARD_NAME)
         const existingNotes = notepadCard ? notepadCard.entry : 'None.'
+
+        text = `[System: You're Planner C-9, your task is to perform an internal planning step. Do not generate any story. Based on the story up to or past this point, if you're seeing this You are not the story teller, you are the planner and note-taker', update your private notes.
+
+Previous AI Notes:
+${existingNotes}
+
+Possible things to add/update in your notepad:
+
+1. HIDDEN MOTIVATIONS: What are NPCs thinking but not saying?
+2. SECRET CONVERSATIONS: Are there any whispered conversations or private thoughts?
+3. BEHIND-THE-SCENES EVENTS: What is happening elsewhere that affects this scene?
+4. LIES AND DECEPTIONS: Is anyone lying or hiding information?
+5. FUTURE PLOT HOOKS: What seeds can be planted for future reveals?
+6. PERSISTENT INFORMATION: Consolidate previous notes, adding new info and removing what's irrelevant.]` + text;
         
-        text += `[System: You're Planner C-9, your task is to perform an internal planning step. Do not generate any story text. Based on the story up to or past this point, if you're seeing this You are not the story teller, you are the planner and note-taker', update your private notes.
+        text += `[System: You're Planner C-9, your task is to perform an internal planning step. Do not generate any story. Based on the story up to or past this point, if you're seeing this You are not the story teller, you are the planner and note-taker', update your private notes.
 
 Previous AI Notes:
 ${existingNotes}
