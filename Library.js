@@ -10,7 +10,8 @@ function initializeSTMR() {
       turnCounter,
       turnsPerPlanning,
        enabled,
-        Version = '1.1.7'
+        Version,
+        InputText
     }
   }
   
@@ -30,9 +31,8 @@ function initializeSTMR() {
       state.stmr.enabled = true
   }
 
-    if (state.stmr.Version === undefined) {
-        state.stmr.Version = '1.1.7'
-    }
+        state.stmr.Version = '1.2.0'
+
 }
 
 /**
@@ -197,7 +197,8 @@ function stmrContext(text) {
   
   // Initialize state and retrieve settings
   initializeSTMR()
-  retrieveSettingsFromCard()
+    retrieveSettingsFromCard()
+    text = removeInputFromText(text)
 
   // Reset planning flag each time to ensure clean state.
   state.stmr.isPlanning = false
@@ -274,4 +275,18 @@ function stmrOutput (text) {
   storeSettingsToCard()
 
   return { text }
+}
+
+function stmrInput(text) {
+    state.stmr.InputText = text
+}
+function removeInputFromText(text) {
+    // Remove the input text from the context
+    if (state.stmr.InputText) {
+        console.log(`does context contain input:` + text.includes(state.stmr.InputText));
+        const inputRegex = new RegExp(state.stmr.InputText);
+        text = text.replace(inputRegex, '');
+        state.stmr.InputText = ''; // Clear the input after removing it
+    }
+    return text;
 }
