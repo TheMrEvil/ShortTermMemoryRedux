@@ -6,28 +6,32 @@
 function initializeSTMR() {
   if (!state.stmr) {
     state.stmr = {
-      isPlanning: false,
-      turnCounter: 0,
-      turnsPerPlanning: 1, // Planning happens every 1 turns by default
-       enabled: true, // STMR is enabled by default
-      Version: '1.1.3'
+      isPlanning,
+      turnCounter,
+      turnsPerPlanning,
+       enabled,
+      Version,
     }
   }
   
-  // Ensure all properties exist for backwards compatibility
+    // Ensure all properties exist for backwards compatibility
+    if (state.stmr.isPlanning === undefined) {
+        state.stmr.isPlanning = false
+    }
   if (state.stmr.turnCounter === undefined) {
-    state.stmr.turnCounter = 0
+      state.stmr.turnCounter = 0
   }
   
   if (state.stmr.turnsPerPlanning === undefined) {
-    state.stmr.turnsPerPlanning = 1
+      state.stmr.turnsPerPlanning = 1
   }
 
   if (state.stmr.enabled === undefined) {
-    state.stmr.enabled = true
-    }
+      state.stmr.enabled = true
+  }
+
     if (state.stmr.Version === undefined) {
-        state.stmr.Version = '1.1.3'
+        state.stmr.Version = '1.1.4'
     }
 }
 
