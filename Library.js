@@ -10,7 +10,7 @@ function initializeSTMR() {
       turnCounter: 0,
       turnsPerPlanning: 1, // Planning happens every 1 turns by default
         enabled: true, // STMR is enabled by default
-      Version: '1.0.3'
+      Version: '1.1.0'
     }
   }
   
@@ -201,8 +201,8 @@ function stmrContext (text) {
     // Read the existing notes from the card
     const notepadCard = storyCards.find(sc => sc.title === STMR_CARD_NAME)
     const existingNotes = notepadCard ? notepadCard.entry : 'None.'
-
-    const prompt = `[System: You're Planner C-9, your task is to perform an internal planning step. Do not generate any story text. Based on the story so far, update your private notes.
+    prompt = text
+    prompt += `[System: You're Planner C-9, your task is to perform an internal planning step. Do not generate any story text. Based on the story so far, update your private notes.
 
 Previous AI Notes:
 ${existingNotes}
@@ -216,8 +216,8 @@ Possible things to add/update in your notepad:
 5. FUTURE PLOT HOOKS: What seeds can be planted for future reveals?
 6. PERSISTENT INFORMATION: Consolidate previous notes, adding new info and removing what's irrelevant.]`
     
-    // Prepend the planning prompt to the context.
-    return { text: prompt }
+
+    return { text }
   }
 
   // Always append notepad content to AI context for normal turns
