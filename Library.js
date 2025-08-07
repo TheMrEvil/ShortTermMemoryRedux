@@ -10,7 +10,7 @@ function initializeSTMR() {
       turnCounter: 0,
       turnsPerPlanning: 1, // Planning happens every 1 turns by default
        enabled: true, // STMR is enabled by default
-      STMRVersion: '1.1.1'
+      Version: '1.1.2'
     }
   }
   
@@ -25,7 +25,10 @@ function initializeSTMR() {
 
   if (state.stmr.enabled === undefined) {
     state.stmr.enabled = true
-  }
+    }
+    if (state.stmr.Version === undefined) {
+        state.stmr.Version = '1.1.2'
+    }
 }
 
 /**
@@ -55,7 +58,7 @@ Edit the settings above to customize STMR behavior.
 Settings are read each turn, so changes take effect immediately.
 
 --- GitHub ---
-Version: ${state.stmr.STMRVersion}
+Version: ${state.stmr.Version}
 https://github.com/TheMrEvil/ShortTermMemoryRedux`
     }
   }
@@ -86,7 +89,7 @@ Edit the settings above to customize STMR behavior.
 Settings are read each turn, so changes take effect immediately.
 
 --- GitHub ---
-Version: ${state.stmr.STMRVersion}
+Version: ${state.stmr.Version}
 https://github.com/TheMrEvil/ShortTermMemoryRedux`
   }
 }
