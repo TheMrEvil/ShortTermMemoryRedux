@@ -9,8 +9,8 @@ function initializeSTMR() {
       isPlanning: false,
       turnCounter: 0,
       turnsPerPlanning: 1, // Planning happens every 1 turns by default
-        enabled: true // STMR is enabled by default
-      Version: '1.0.3',
+        enabled: true, // STMR is enabled by default
+      Version: '1.0.3'
     }
   }
   
