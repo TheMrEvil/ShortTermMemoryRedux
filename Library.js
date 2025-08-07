@@ -31,7 +31,7 @@ function initializeSTMR() {
   }
 
     if (state.stmr.Version === undefined) {
-        state.stmr.Version = '1.1.4'
+        state.stmr.Version = '1.1.5'
     }
 }
 
@@ -210,7 +210,7 @@ function stmrContext(text) {
     const notepadCard = storyCards.find(sc => sc.title === STMR_CARD_NAME)
     const existingNotes = notepadCard ? notepadCard.entry : 'None.'
     prompt = text
-    prompt += `[System: You're Planner C-9, your task is to perform an internal planning step. Do not generate any story text. Based on the story so far, update your private notes.
+    prompt += `[System: You're Planner C-9, your task is to perform an internal planning step. Do not generate any story text. Based on the story up to or past this point, if you're seeing this You are not the story teller, you are the planner and note-taker', update your private notes.
 
 Previous AI Notes:
 ${existingNotes}
