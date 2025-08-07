@@ -51,7 +51,10 @@ Next Planning: In 1 turns
 Edit the settings above to customize STMR behavior.
 - turnsPerPlanning: Number of turns between planning phases (1-10)
 - enabled: Set to true or false to enable/disable STMR
-Settings are read each turn, so changes take effect immediately.`
+Settings are read each turn, so changes take effect immediately.
+
+--- GitHub ---
+https://github.com/TheMrEvil/ShortTermMemoryRedux`
     }
   }
 }
@@ -78,7 +81,10 @@ Next Planning: ${nextPlanningText}
 Edit the settings above to customize STMR behavior.
 - turnsPerPlanning: Number of turns between planning phases (1-10)
 - enabled: Set to true or false to enable/disable STMR
-Settings are read each turn, so changes take effect immediately.`
+Settings are read each turn, so changes take effect immediately.
+
+--- GitHub ---
+https://github.com/TheMrEvil/ShortTermMemoryRedux`
   }
 }
 
