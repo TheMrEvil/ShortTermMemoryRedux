@@ -29,7 +29,7 @@ function initializeSTMR() {
         state.stmr.enabled = true
     }
 
-    state.stmr.Version = '1.2.6'
+    state.stmr.Version = '1.2.7'
 
 }
 
@@ -189,7 +189,6 @@ function feedNotepadToAI(text) {
  * @returns {{text: string}} The modified context.
  */
 function stmrContext(text) {
-    initializeSTMR()
     // Ensure notepad card exists
     createIfNoNotepadCard()
 
@@ -208,8 +207,8 @@ function stmrContext(text) {
         // Read the existing notes from the card
         const notepadCard = storyCards.find(sc => sc.title === STMR_CARD_NAME)
         const existingNotes = notepadCard ? notepadCard.entry : 'None.'
-        prompt = text
-        prompt += `[System: You're Planner C-9, your task is to perform an internal planning step. Do not generate any story text. Based on the story up to or past this point, if you're seeing this You are not the story teller, you are the planner and note-taker', update your private notes.
+        
+        text += `[System: You're Planner C-9, your task is to perform an internal planning step. Do not generate any story text. Based on the story up to or past this point, if you're seeing this You are not the story teller, you are the planner and note-taker', update your private notes.
 
 Previous AI Notes:
 ${existingNotes}
