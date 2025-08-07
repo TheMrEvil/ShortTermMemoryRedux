@@ -29,7 +29,7 @@ function initializeSTMR() {
         state.stmr.enabled = true
     }
 
-    state.stmr.Version = '1.2.5'
+    state.stmr.Version = '1.2.6'
 
 }
 
@@ -277,6 +277,7 @@ function stmrOutput(text) {
 
 function stmrInput(text) {
     InputText = text
+    return { text }
 }
 function removeInputFromText(text) {
     // Remove the input text from the context
