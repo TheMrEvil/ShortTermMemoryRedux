@@ -10,7 +10,7 @@ function initializeSTMR() {
       turnCounter,
       turnsPerPlanning,
        enabled,
-      Version,
+        Version = '1.1.6',
     }
   }
   
@@ -31,7 +31,7 @@ function initializeSTMR() {
   }
 
     if (state.stmr.Version === undefined) {
-        state.stmr.Version = '1.1.5'
+        state.stmr.Version = '1.1.6'
     }
 }
 
@@ -57,7 +57,7 @@ Next Planning: In 1 turns
 
 --- Instructions ---
 Edit the settings above to customize STMR behavior.
-- turnsPerPlanning: Number of turns between planning phases (1-10)
+- turnsPerPlanning: Number of turns between planning phases
 - enabled: Set to true or false to enable/disable STMR
 Settings are read each turn, so changes take effect immediately.
 
@@ -88,7 +88,7 @@ Next Planning: ${nextPlanningText}
 
 --- Instructions ---
 Edit the settings above to customize STMR behavior.
-- turnsPerPlanning: Number of turns between planning phases (1-10)
+- turnsPerPlanning: Number of turns between planning phases
 - enabled: Set to true or false to enable/disable STMR
 Settings are read each turn, so changes take effect immediately.
 
