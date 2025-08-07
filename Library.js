@@ -168,7 +168,7 @@ function feedNotepadToAI(text) {
     
     if (notepadCard && notepadCard.entry && notepadCard.entry !== 'None.') {
       // Append the notepad content to the end of the context
-      text = text + "\n\n[STMR Notes: " + notepadCard.entry + "]"
+      text = text + "\n\n[STMR Notes(ONLY TO BE EDITED BY PLANNER C-9): " + notepadCard.entry + "]"
     }
   }
   
@@ -199,7 +199,7 @@ function stmrContext (text) {
     const notepadCard = storyCards.find(sc => sc.title === STMR_CARD_NAME)
     const existingNotes = notepadCard ? notepadCard.entry : 'None.'
 
-    const prompt = `[System: Your task is to perform an internal planning step. Do not generate any story text. Based on the story so far, update your private notes.
+    const prompt = `[System: You're Planner C-9, your task is to perform an internal planning step. Do not generate any story text. Based on the story so far, update your private notes.
 
 Previous AI Notes:
 ${existingNotes}
