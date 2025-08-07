@@ -29,7 +29,7 @@ function initializeSTMR() {
         state.stmr.enabled = true
     }
 
-    state.stmr.Version = '1.2.7'
+    state.stmr.Version = '1.2.8'
 
 }
 
@@ -284,5 +284,5 @@ function removeInputFromText(text) {
     const inputRegex = new RegExp(InputText);
     text = text.replace(inputRegex, '');
     state.stmr.InputText = ''; // Clear the input after removing it
-    return { text }
+    return text
 }
