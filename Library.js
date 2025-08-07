@@ -31,7 +31,7 @@ function initializeSTMR() {
   }
 
     if (state.stmr.Version === undefined) {
-        state.stmr.Version = '1.1.6'
+        state.stmr.Version = '1.1.7'
     }
 }
 
