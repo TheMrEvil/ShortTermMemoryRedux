@@ -23,8 +23,14 @@ function initializeSTMR() {
         state.stmr.enabled = true
     }
 
-    state.stmr.Version = '1.3.3'
+    state.stmr.Version = '1.3.4'
 
+    if (state.stmr.CachedTurn === undefined) {
+        state.stmr.CachedTurn = 0
+    }
+    if (stete.stmr.CachedTurn < info.actionCount + 2) {
+        state.stmr.CachedTurn = info.actionCount
+    }
 }
 
 /**
@@ -120,7 +126,7 @@ function retrieveSettingsFromCard() {
  */
 function incrementTurnCounter() {
     initializeSTMR()
-    if (state.retries === 0) {
+    if (state.stmr.CachedTurn != info.actionCount) {
         state.stmr.turnCounter += 1
     }
 }
@@ -146,7 +152,7 @@ function shouldTriggerPlanning() {
     }
 
     // Trigger planning when counter reaches the threshold
-    return (state.stmr.turnCounter >= state.stmr.turnsPerPlanning && state.retries === 0)
+    return (state.stmr.turnCounter >= state.stmr.turnsPerPlanning && state.stmr.CachedTurn != info.actionCount)
 }
 
 /**
@@ -194,10 +200,9 @@ function stmrContext(text) {
     retrieveSettingsFromCard()
 
     // Reset planning flag each time to ensure clean state.
-    state.stmr.isPlanning = false
+    state.stmr.isPlanning = shouldTriggerPlanning()
     // Check if it's time for planning based on our counter
-    if (shouldTriggerPlanning()) {
-        state.stmr.isPlanning = true
+    if (state.stmr.isPlanning) {
         text = removeInputFromText(text)
         // Read the existing notes from the card
         const notepadCard = storyCards.find(sc => sc.title === STMR_CARD_NAME)
@@ -279,7 +284,7 @@ function stmrOutput(text) {
 
     // Update card description with current status
     storeSettingsToCard()
-
+    state.stmr.CachedTurn = info.actionCount
     return { text }
 }
 
