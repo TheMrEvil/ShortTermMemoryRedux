@@ -29,7 +29,7 @@ function initializeSTMR() {
         state.stmr.enabled = true
     }
 
-    state.stmr.Version = '1.3.0'
+    state.stmr.Version = '1.3.1'
 
 }
 
@@ -37,6 +37,7 @@ function initializeSTMR() {
  * Creates the notepad card if it doesn't exist
  */
 function createIfNoNotepadCard() {
+    initializeSTMR();
     if (!storyCards.find(sc => sc.title === STMR_CARD_NAME)) {
         addStoryCard(STMR_CARD_NAME, 'None.', STMR_CARD_NAME)
 
