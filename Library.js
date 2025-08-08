@@ -23,10 +23,13 @@ function initializeSTMR() {
         state.stmr.enabled = true
     }
 
-    state.stmr.Version = '1.3.5'
+    state.stmr.Version = '1.4.0'
 
-    if (state.stmr.CachedTurn === undefined) {
-        state.stmr.CachedTurn = 0
+    if (state.stmr.cachedContext === undefined) {
+        state.stmr.cachedContext = ''
+    }
+    if (state.stmr.isRetry === undefined) {
+        state.stmr.isRetry = false
     }
 }
 
@@ -57,7 +60,7 @@ Edit the settings above to customize STMR behavior.
 - enabled: Set to true or false to enable/disable STMR
 Settings are read each turn, so changes take effect immediately.
 
---- GitHub ---
+--- Version & GitHub ---
 Version: ${state.stmr.Version}
 https://github.com/TheMrEvil/ShortTermMemoryRedux`
         }
@@ -88,7 +91,7 @@ Edit the settings above to customize STMR behavior.
 - enabled: Set to true or false to enable/disable STMR
 Settings are read each turn, so changes take effect immediately.
 
---- GitHub ---
+--- Version & GitHub ---
 Version: ${state.stmr.Version}
 https://github.com/TheMrEvil/ShortTermMemoryRedux`
     }
@@ -104,10 +107,8 @@ function retrieveSettingsFromCard() {
         const turnsMatch = notepadCard.description.match(/turnsPerPlanning\s*=\s*(\d+)/);
         if (turnsMatch) {
             const newValue = Number(turnsMatch[1])
-            if (newValue >= 1 && newValue <= 10) {
                 state.stmr.turnsPerPlanning = newValue
-                console.log(`STMR: Updated turnsPerPlanning to ${newValue}`)
-            }
+
         }
 
         // Extract enabled setting
@@ -123,7 +124,7 @@ function retrieveSettingsFromCard() {
  */
 function incrementTurnCounter() {
     initializeSTMR()
-    if (state.stmr.CachedTurn != info.actionCount) {
+    if (!state.stmr.isRetry) {
         state.stmr.turnCounter += 1
     }
 }
@@ -149,7 +150,7 @@ function shouldTriggerPlanning() {
     }
 
     // Trigger planning when counter reaches the threshold
-    return (state.stmr.turnCounter >= state.stmr.turnsPerPlanning && state.stmr.CachedTurn != info.actionCount)
+    return (state.stmr.turnCounter >= state.stmr.turnsPerPlanning && !state.stmr.isRetry)
 }
 
 /**
@@ -189,6 +190,12 @@ function feedNotepadToAI(text) {
  * @returns {{text: string}} The modified context.
  */
 function stmrContext(text) {
+    state.stmr.isRetry = false
+    if (state.stmr.cachedContext === text) {
+        state.stmr.isRetry = true
+    }
+    state.stmr.cachedContext = text
+    console.log(info.actionCount)
     // Ensure notepad card exists
     createIfNoNotepadCard()
 
@@ -205,33 +212,9 @@ function stmrContext(text) {
         const notepadCard = storyCards.find(sc => sc.title === STMR_CARD_NAME)
         const existingNotes = notepadCard ? notepadCard.entry : 'None.'
 
-        text = `[System: You're Planner C-9, your task is to perform an internal planning step. Do not generate any story. Based on the story up to or past this point, if you're seeing this You are not the story teller, you are the planner and note-taker', update your private notes.
-
-Previous AI Notes:
-${existingNotes}
-
-Possible things to add/update in your notepad:
-
-1. HIDDEN MOTIVATIONS: What are NPCs thinking but not saying?
-2. SECRET CONVERSATIONS: Are there any whispered conversations or private thoughts?
-3. BEHIND-THE-SCENES EVENTS: What is happening elsewhere that affects this scene?
-4. LIES AND DECEPTIONS: Is anyone lying or hiding information?
-5. FUTURE PLOT HOOKS: What seeds can be planted for future reveals?
-6. PERSISTENT INFORMATION: Consolidate previous notes, adding new info and removing what's irrelevant.]` + text;
+        text = '[System: Youre Planner C-9, your task is to perform an internal planning step. Do not generate any story. Based on the story up to or past this point, if youre seeing this You are not the story teller, you are the planner and note-taker, start your output with 1., update your private notes.\n\nPrevious AI Notes:\n${existingNotes}\n\nPossible things to add/update in your notepad:\n\n1. HIDDEN MOTIVATIONS: What are NPCs thinking but not saying?\n2. SECRET CONVERSATIONS: Are there any whispered conversations or private thoughts?\n3. BEHIND-THE-SCENES EVENTS: What is happening elsewhere that affects this scene?\n4. LIES AND DECEPTIONS: Is anyone lying or hiding information?\n5. FUTURE PLOT HOOKS: What seeds can be planted for future reveals?\n6. PERSISTENT INFORMATION: Consolidate previous notes, adding new info and removing whats irrelevant.]' + text;
         
-        text += `[System: You're Planner C-9, your task is to perform an internal planning step. Do not generate any story. Based on the story up to or past this point, if you're seeing this You are not the story teller, you are the planner and note-taker', update your private notes.
-
-Previous AI Notes:
-${existingNotes}
-
-Possible things to add/update in your notepad:
-
-1. HIDDEN MOTIVATIONS: What are NPCs thinking but not saying?
-2. SECRET CONVERSATIONS: Are there any whispered conversations or private thoughts?
-3. BEHIND-THE-SCENES EVENTS: What is happening elsewhere that affects this scene?
-4. LIES AND DECEPTIONS: Is anyone lying or hiding information?
-5. FUTURE PLOT HOOKS: What seeds can be planted for future reveals?
-6. PERSISTENT INFORMATION: Consolidate previous notes, adding new info and removing what's irrelevant.]`
+        text += '[System: Youre Planner C-9, your task is to perform an internal planning step. Do not generate any story. Based on the story up to or past this point, if youre seeing this You are not the story teller, you are the planner and note-taker, start your output with 1., update your private notes.\n\nPrevious AI Notes:\n${existingNotes}\n\nPossible things to add/update in your notepad:\n\n1. HIDDEN MOTIVATIONS: What are NPCs thinking but not saying?\n2. SECRET CONVERSATIONS: Are there any whispered conversations or private thoughts?\n3. BEHIND-THE-SCENES EVENTS: What is happening elsewhere that affects this scene?\n4. LIES AND DECEPTIONS: Is anyone lying or hiding information?\n5. FUTURE PLOT HOOKS: What seeds can be planted for future reveals?\n6. PERSISTENT INFORMATION: Consolidate previous notes, adding new info and removing whats irrelevant.]'
 
 
         return { text }
@@ -246,11 +229,6 @@ Possible things to add/update in your notepad:
     return { text }
 }
 
-/**
- * Handles the output from the AI. This function updates the notepad card and manages the counter.
- * @param {string} text The AI's output text.
- * @returns {{stop: boolean, text: string}} The modification result.
- */
 function stmrOutput(text) {
     if (state.stmr && state.stmr.isPlanning) {
         state.stmr.isPlanning = false
@@ -281,7 +259,6 @@ function stmrOutput(text) {
 
     // Update card description with current status
     storeSettingsToCard()
-    state.stmr.CachedTurn = info.actionCount
     return { text }
 }
 
@@ -291,7 +268,6 @@ function stmrInput(text) {
 }
 function removeInputFromText(text) {
     // Remove the input text from the context
-    console.log(`does context contain input:` + text.includes(InputText));
     const inputRegex = new RegExp(InputText);
     text = text.replace(inputRegex, '');
     state.stmr.InputText = ''; // Clear the input after removing it
