@@ -173,12 +173,6 @@ function feedNotepadToAI(text) {
 
     return text
 }
-
-/**
- * Modifies the context to inject a planning prompt on certain turns.
- * @param {string} text The context text.
- * @returns {{text: string}} The modified context.
- */
 function stmrContext(text) {
     // Initialize state and retrieve settings
     initializeSTMR()
