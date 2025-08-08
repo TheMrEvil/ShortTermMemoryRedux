@@ -23,13 +23,10 @@ function initializeSTMR() {
         state.stmr.enabled = true
     }
 
-    state.stmr.Version = '1.3.4'
+    state.stmr.Version = '1.3.5'
 
     if (state.stmr.CachedTurn === undefined) {
         state.stmr.CachedTurn = 0
-    }
-    if (state.stmr.CachedTurn < info.actionCount + 2) {
-        state.stmr.CachedTurn = info.actionCount
     }
 }
 
