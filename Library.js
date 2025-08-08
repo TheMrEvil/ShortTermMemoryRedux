@@ -28,7 +28,7 @@ function initializeSTMR() {
     if (state.stmr.CachedTurn === undefined) {
         state.stmr.CachedTurn = 0
     }
-    if (stete.stmr.CachedTurn < info.actionCount + 2) {
+    if (state.stmr.CachedTurn < info.actionCount + 2) {
         state.stmr.CachedTurn = info.actionCount
     }
 }
