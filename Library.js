@@ -23,7 +23,7 @@ function initializeSTMR() {
         state.stmr.enabled = true
     }
 
-    state.stmr.Version = '1.3.2'
+    state.stmr.Version = '1.3.3'
 
 }
 
@@ -120,7 +120,9 @@ function retrieveSettingsFromCard() {
  */
 function incrementTurnCounter() {
     initializeSTMR()
-    state.stmr.turnCounter += 1
+    if (state.retries === 0) {
+        state.stmr.turnCounter += 1
+    }
 }
 
 /**
@@ -144,7 +146,7 @@ function shouldTriggerPlanning() {
     }
 
     // Trigger planning when counter reaches the threshold
-    return state.stmr.turnCounter >= state.stmr.turnsPerPlanning
+    return (state.stmr.turnCounter >= state.stmr.turnsPerPlanning && state.retries === 0)
 }
 
 /**
