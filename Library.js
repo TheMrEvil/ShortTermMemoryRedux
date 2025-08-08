@@ -6,13 +6,7 @@ InputText = ''
  */
 function initializeSTMR() {
     if (!state.stmr) {
-        state.stmr = {
-            isPlanning,
-            turnCounter,
-            turnsPerPlanning,
-            enabled,
-            Version
-        }
+        state.stmr = {}
     }
 
     // Ensure all properties exist for backwards compatibility
@@ -29,7 +23,7 @@ function initializeSTMR() {
         state.stmr.enabled = true
     }
 
-    state.stmr.Version = '1.3.1'
+    state.stmr.Version = '1.3.2'
 
 }
 
