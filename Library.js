@@ -23,7 +23,7 @@ function initializeSTMR() {
         state.stmr.enabled = true
     }
 
-    state.stmr.Version = '1.4.1'
+    state.stmr.Version = '1.4.2'
 
     if (state.stmr.cachedContext === undefined) {
         state.stmr.cachedContext = ''
@@ -233,7 +233,7 @@ function stmrOutput(text) {
         storeSettingsToCard()
 
         // Inform the user that planning is complete
-        text = "\n\n[STMR updated - feel free to delete and continue]";
+        text = "\n\n[STMR updated - erase and continue]";
         return { text };
     }
 
