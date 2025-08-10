@@ -23,7 +23,7 @@ function initializeSTMR() {
         state.stmr.enabled = true
     }
 
-    state.stmr.Version = '1.4.2'
+    state.stmr.Version = '1.5.0'
 
     if (state.stmr.cachedContext === undefined) {
         state.stmr.cachedContext = ''
@@ -167,7 +167,7 @@ function feedNotepadToAI(text) {
 
         if (notepadCard && notepadCard.entry && notepadCard.entry !== 'None.') {
             // Append the notepad content to the end of the context
-            text = text + "\n\n[STMR Notes(ONLY TO BE EDITED BY PLANNER C-9): " + notepadCard.entry + "]"
+            text = "[STMR Notes(ONLY TO BE EDITED BY PLANNER C-9): " + notepadCard.entry + "]" + text;
         }
     }
 
@@ -195,7 +195,7 @@ function stmrContext(text) {
         // Read the existing notes from the card
         const notepadCard = storyCards.find(sc => sc.title === STMR_CARD_NAME)
         const existingNotes = notepadCard ? notepadCard.entry : 'None.'
-        prompt = '[System: Youre Planner C-9, your task is to perform an internal planning step. Do not generate any story. Based on the story up to or past this point, if youre seeing this You are not the story teller, you are the planner and note-taker, start your output with 1., update your private notes.\n\nPrevious AI Notes:\n${existingNotes}\n\nPossible things to add/update in your notepad:\n\n1. HIDDEN MOTIVATIONS: What are NPCs thinking but not saying?\n2. SECRET CONVERSATIONS: Are there any whispered conversations or private thoughts?\n3. BEHIND-THE-SCENES EVENTS: What is happening elsewhere that affects this scene?\n4. LIES AND DECEPTIONS: Is anyone lying or hiding information?\n5. FUTURE PLOT HOOKS: What seeds can be planted for future reveals?\n6. PERSISTENT INFORMATION: Consolidate previous notes, adding new info and removing whats irrelevant.]';
+        prompt = '[System: Youre Planner C-9, your task is to perform an internal planning step. Do not generate any story. Based on the story up to or past this point, if youre seeing this You are not the story teller, you are the planner and note-taker, prior notes will not be kept unless rewritten.\n\nPrevious AI Notes:\n'+existingNotes+'\n\nPossible things to add/update in your notepad:\nhidden motivations, secret conversations, behind-the-scenes events, lies and deceptions, future plot hooks]';
 
         text = prompt + text;
         
