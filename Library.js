@@ -22,8 +22,14 @@ function initializeSTMR() {
     if (state.stmr.enabled === undefined) {
         state.stmr.enabled = true
     }
+    if (state.stmr.existingNotes === undefined) {
+        state.stmr.existingNotes = ''
+    }
+    if (state.stmr.notePrompt === undefined) {
+        state.stmr.notePrompt = '[System: Youre Planner C-9, your task is to perform an internal planning step. Do not generate any story. Based on the story up to or past this point, if youre seeing this You are not the story teller, you are the planner and note-taker, prior notes will not be kept unless rewritten.\nPossible things to add/update in your notepad:\nhidden motivations, secret conversations, behind-the-scenes events, lies and deceptions, future plot hooks]';
+    }
 
-    state.stmr.Version = '1.5.0'
+    state.stmr.Version = '1.6.0'
 
     if (state.stmr.cachedContext === undefined) {
         state.stmr.cachedContext = ''
@@ -31,22 +37,30 @@ function initializeSTMR() {
     if (state.stmr.isRetry === undefined) {
         state.stmr.isRetry = false
     }
+    if (state.stmr.cachedHash === undefined) {
+        state.stmr.cachedHash = ''
+    }
+    if (state.stmr.cachedTextLink === undefined) {
+        state.stmr.cachedTextValidator = ''
+    }
 }
 
 
-function getDescription(tpp, enbld, cc, np, vs) {
+function getDescription(tpp, enbld, notePrompt, np, vs, cc) {
     desc = `STMR Settings (Edit these values):
 turnsPerPlanning = ${tpp}
 enabled = ${enbld}
+notePrompt = ${notePrompt}
 
 --- STMR Status ---
-Current Counter: ${cc}
+Turn Counter: ${cc}
 Next Planning: ${np}
 
 --- Instructions ---
 Edit the settings above to customize STMR behavior.
 - turnsPerPlanning: Number of turns between planning phases
 - enabled: Set to true or false to enable/disable STMR
+- notePrompt: The prompt used for planning phase
 Settings are read each turn, so changes take effect immediately.
 
 --- Version & GitHub ---
@@ -55,6 +69,7 @@ https://github.com/TheMrEvil/ShortTermMemoryRedux`
 
     return desc;
 }
+
 /**
  * Creates the notepad card if it doesn't exist
  */
@@ -68,7 +83,14 @@ function createIfNoNotepadCard() {
         if (notepadCard) {
             notepadCard.keys = STMR_CARD_NAME
             // Initialize with settings in description
-            notepadCard.description = getDescription(1, true, 0, 1, state.stmr.Version)
+            notepadCard.description = getDescription(
+                1,
+                true,
+                state.stmr.notePrompt,
+                1,
+                state.stmr.Version,
+                state.stmr.turnCounter
+            )
         }
     }
 }
@@ -83,7 +105,14 @@ function storeSettingsToCard() {
         const turnsUntilPlanning = state.stmr.turnsPerPlanning - state.stmr.turnCounter
         const nextPlanningText = state.stmr.enabled ? `In ${turnsUntilPlanning} turns` : 'DISABLED'
 
-        notepadCard.description = getDescription(state.stmr.turnsPerPlanning, state.stmr.enabled, state.stmr.turnCounter, nextPlanningText, state.stmr.Version)
+        notepadCard.description = getDescription(
+            state.stmr.turnsPerPlanning,
+            state.stmr.enabled,
+            state.stmr.notePrompt,
+            nextPlanningText,
+            state.stmr.Version,
+            state.stmr.turnCounter
+        )
     }
 }
 
@@ -97,14 +126,19 @@ function retrieveSettingsFromCard() {
         const turnsMatch = notepadCard.description.match(/turnsPerPlanning\s*=\s*(\d+)/);
         if (turnsMatch) {
             const newValue = Number(turnsMatch[1])
-                state.stmr.turnsPerPlanning = newValue
-
+            state.stmr.turnsPerPlanning = newValue
         }
 
         // Extract enabled setting
         const enabledMatch = notepadCard.description.match(/enabled\s*=\s*(true|false)/i);
         if (enabledMatch) {
             state.stmr.enabled = enabledMatch[1].toLowerCase() === 'true'
+        }
+
+        // Extract notePrompt
+        const notePromptMatch = notepadCard.description.match(/notePrompt\s*=\s*([\s\S]*?)\n--- STMR Status ---/);
+        if (notePromptMatch) {
+            state.stmr.notePrompt = notePromptMatch[1].trim();
         }
     }
 }
@@ -177,6 +211,8 @@ function stmrContext(text) {
     // Initialize state and retrieve settings
     initializeSTMR()
     retrieveSettingsFromCard()
+    state.stmr.isRetry = getIsRetry(text);
+    cacheContextVAL(text);
 
     state.stmr.isRetry = false
     if (state.stmr.cachedContext === text) {
@@ -194,9 +230,8 @@ function stmrContext(text) {
         text = removeInputFromText(text)
         // Read the existing notes from the card
         const notepadCard = storyCards.find(sc => sc.title === STMR_CARD_NAME)
-        const existingNotes = notepadCard ? notepadCard.entry : 'None.'
-        prompt = '[System: Youre Planner C-9, your task is to perform an internal planning step. Do not generate any story. Based on the story up to or past this point, if youre seeing this You are not the story teller, you are the planner and note-taker, prior notes will not be kept unless rewritten.\n\nPrevious AI Notes:\n'+existingNotes+'\n\nPossible things to add/update in your notepad:\nhidden motivations, secret conversations, behind-the-scenes events, lies and deceptions, future plot hooks]';
-
+        state.stmr.existingNotes = notepadCard ? notepadCard.entry : 'None.'
+        prompt = state.stmr.notePrompt + "\nExisting Notes: " + state.stmr.existingNotes
         text = prompt + text;
         
         text += prompt;
@@ -257,4 +292,24 @@ function removeInputFromText(text) {
     text = text.replace(inputRegex, '');
     state.stmr.InputText = ''; // Clear the input after removing it
     return text
+}
+function cacheContextVAL(text) {
+    state.stmr.cachedHash = hash(text);
+    state.stmr.cachedTextLink = getTextLink(text);
+}
+function hash(str) {  //credits to lewdleah for of hash function
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = ((31 * hash) + str.charCodeAt(i)) % 65536;
+    }
+    return hash.toString(36);
+}
+function getTextLink(str) {
+    return str[0] + str[1] + str[str.length - 2] + str[str.length - 1]
+}
+function getIsRetry(text) {
+    if (state.stmr.cachedHash === undefined || state.stmr.cachedTextLink === undefined) return false;
+    let Chash = hash(text);
+    let Clink = getTextLink(text);
+    return (Chash === state.stmr.cachedHash && Clink === state.stmr.cachedTextLink);
 }
