@@ -29,11 +29,8 @@ function initializeSTMR() {
         state.stmr.notePrompt = '[System: Youre Planner C-9, your task is to perform an internal planning step. Do not generate any story. Based on the story up to or past this point, if youre seeing this You are not the story teller, you are the planner and note-taker, prior notes will not be kept unless rewritten.\nPossible things to add/update in your notepad:\nhidden motivations, secret conversations, behind-the-scenes events, lies and deceptions, future plot hooks]';
     }
 
-    state.stmr.Version = '1.6.0'
+    state.stmr.Version = '1.6.1'
 
-    if (state.stmr.cachedContext === undefined) {
-        state.stmr.cachedContext = ''
-    }
     if (state.stmr.isRetry === undefined) {
         state.stmr.isRetry = false
     }
@@ -214,11 +211,6 @@ function stmrContext(text) {
     state.stmr.isRetry = getIsRetry(text);
     cacheContextVAL(text);
 
-    state.stmr.isRetry = false
-    if (state.stmr.cachedContext === text) {
-        state.stmr.isRetry = true
-    }
-    state.stmr.cachedContext = text
     console.log(info.actionCount)
     // Ensure notepad card exists
     createIfNoNotepadCard()
